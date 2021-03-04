@@ -1,0 +1,177 @@
+Year,Scenario,Country,Material,Value
+2010,Baseline,Uganda,Aluminium,1303457899.8495016
+2010,Baseline,Uganda,Bentonite,758109643.6734695
+2010,Baseline,Uganda,Carbon Fiber,170478.96281800393
+2010,Baseline,Uganda,Cast Iron,634081674.5578232
+2010,Baseline,Uganda,Cement,1665649075.3714287
+2010,Baseline,Uganda,Ceramics,22312.138812785386
+2010,Baseline,Uganda,Concrete,3403862859.735261
+2010,Baseline,Uganda,Copper,25576566.680730596
+2010,Baseline,Uganda,Epoxy,1410493.9660795822
+2010,Baseline,Uganda,EVA ,0.0
+2010,Baseline,Uganda,Fibre Glass,4570314.611872146
+2010,Baseline,Uganda,Glass,0.0
+2010,Baseline,Uganda,Lubricant,42447762.74121704
+2010,Baseline,Uganda,Non-Ferrous Metal,0.0
+2010,Baseline,Uganda,Paint,57288.323548597524
+2010,Baseline,Uganda,Plastic,6397350.130463145
+2010,Baseline,Uganda,PVC,0.0
+2010,Baseline,Uganda,Resin,549136.301369863
+2010,Baseline,Uganda,Sand,1672510693.8775508
+2010,Baseline,Uganda,Silicon,0.0
+2010,Baseline,Uganda,Steel,6664108828.754451
+2010,Baseline,Uganda,Stainless Steel,0.0
+2040,Scenario 1,Uganda,Aluminium,6074908753.098499
+2040,Scenario 1,Uganda,Bentonite,3537404685.714286
+2040,Scenario 1,Uganda,Carbon Fiber,716095.8904109589
+2040,Scenario 1,Uganda,Cast Iron,25750004467.38422
+2040,Scenario 1,Uganda,Cement,9106698266.666666
+2040,Scenario 1,Uganda,Ceramics,421749.0410958904
+2040,Scenario 1,Uganda,Concrete,40107372351.455185
+2040,Scenario 1,Uganda,Copper,754903355.1872146
+2040,Scenario 1,Uganda,Epoxy,5924771.689497716
+2040,Scenario 1,Uganda,EVA ,0.0
+2040,Scenario 1,Uganda,Fibre Glass,19197579.9086758
+2040,Scenario 1,Uganda,Glass,0.0
+2040,Scenario 1,Uganda,Lubricant,176063408.74103066
+2040,Scenario 1,Uganda,Non-Ferrous Metal,0.0
+2040,Scenario 1,Uganda,Paint,240639.2694063927
+2040,Scenario 1,Uganda,Plastic,115116780.8219178
+2040,Scenario 1,Uganda,PVC,5678154020.000001
+2040,Scenario 1,Uganda,Resin,2306643.8356164386
+2040,Scenario 1,Uganda,Sand,12122182957.142857
+2040,Scenario 1,Uganda,Silicon,0.0
+2040,Scenario 1,Uganda,Steel,60547420296.93412
+2040,Scenario 1,Uganda,Stainless Steel,0.0
+2020,Baseline,UK,Aluminium,649499605.408643
+2020,Baseline,UK,Bentonite,0.0
+2020,Baseline,UK,Carbon Fiber,191714169.81676614
+2020,Baseline,UK,Cast Iron,266386959983.92215
+2020,Baseline,UK,Cement,10859381514.85333
+2020,Baseline,UK,Ceramics,11188065542.32286
+2020,Baseline,UK,Concrete,560170268018.6157
+2020,Baseline,UK,Copper,2841231884.0728154
+2020,Baseline,UK,Epoxy,1586187968.7007775
+2020,Baseline,UK,EVA ,0.0
+2020,Baseline,UK,Fibre Glass,5139602312.995603
+2020,Baseline,UK,Glass,13190050563.059002
+2020,Baseline,UK,Lubricant,46936200816.3866
+2020,Baseline,UK,Non-Ferrous Metal,2977365782.438076
+2020,Baseline,UK,Paint,64424273.86796477
+2020,Baseline,UK,Plastic,2140994108.4629078
+2020,Baseline,UK,PVC,25563824862.970608
+2020,Baseline,UK,Resin,617537838.060185
+2020,Baseline,UK,Sand,46668427791.953
+2020,Baseline,UK,Silicon,0.0
+2020,Baseline,UK,Steel,476419610060.193
+2020,Baseline,UK,Stainless Steel,173733028451.94196
+2050,Consumer Transformation,UK,Aluminium,1211585388.1417189
+2050,Consumer Transformation,UK,Bentonite,0.0
+2050,Consumer Transformation,UK,Carbon Fiber,649835244.579804
+2050,Consumer Transformation,UK,Cast Iron,73435140968.5113
+2050,Consumer Transformation,UK,Cement,59398356499.209724
+2050,Consumer Transformation,UK,Ceramics,102523715087.00404
+2050,Consumer Transformation,UK,Concrete,1898440367574.5122
+2050,Consumer Transformation,UK,Copper,12360130750.637478
+2050,Consumer Transformation,UK,Epoxy,5376550140.114203
+2050,Consumer Transformation,UK,EVA ,0.0
+2050,Consumer Transformation,UK,Fibre Glass,17421219982.334015
+2050,Consumer Transformation,UK,Glass,120869240602.38173
+2050,Consumer Transformation,UK,Lubricant,159095165299.023
+2050,Consumer Transformation,UK,Non-Ferrous Metal,27283590718.49879
+2050,Consumer Transformation,UK,Paint,218372819.31679046
+2050,Consumer Transformation,UK,Plastic,17054428800.723951
+2050,Consumer Transformation,UK,PVC,139828330058.8687
+2050,Consumer Transformation,UK,Resin,2093209137.418848
+2050,Consumer Transformation,UK,Sand,255265726455.27786
+2050,Consumer Transformation,UK,Silicon,0.0
+2050,Consumer Transformation,UK,Steel,1051777865281.4648
+2050,Consumer Transformation,UK,Stainless Steel,1592031745151.1099
+2050,System Transformation,UK,Aluminium,724484067.7157297
+2050,System Transformation,UK,Bentonite,0.0
+2050,System Transformation,UK,Carbon Fiber,276785983.6217165
+2050,System Transformation,UK,Cast Iron,36754415336.543594
+2050,System Transformation,UK,Cement,39088608481.37798
+2050,System Transformation,UK,Ceramics,101901809871.20998
+2050,System Transformation,UK,Concrete,1052773156016.6477
+2050,System Transformation,UK,Copper,6930701008.879343
+2050,System Transformation,UK,Epoxy,2290047718.1493235
+2050,System Transformation,UK,EVA ,0.0
+2050,System Transformation,UK,Fibre Glass,7420264673.11509
+2050,System Transformation,UK,Glass,120136052080.13692
+2050,System Transformation,UK,Lubricant,67763809648.7422
+2050,System Transformation,UK,Non-Ferrous Metal,27118089425.856148
+2050,System Transformation,UK,Paint,93012092.05716218
+2050,System Transformation,UK,Plastic,16095728425.82829
+2050,System Transformation,UK,PVC,92017610762.49197
+2050,System Transformation,UK,Resin,891565908.218895
+2050,System Transformation,UK,Sand,167984143471.3373
+2050,System Transformation,UK,Silicon,0.0
+2050,System Transformation,UK,Steel,850042615648.9993
+2050,System Transformation,UK,Stainless Steel,1582374537107.3027
+2050,Leading the Way,UK,Aluminium,836562617.9197868
+2050,Leading the Way,UK,Bentonite,0.0
+2050,Leading the Way,UK,Carbon Fiber,599261751.0425193
+2050,Leading the Way,UK,Cast Iron,69166405301.42183
+2050,Leading the Way,UK,Cement,58457106056.71012
+2050,Leading the Way,UK,Ceramics,104775159264.50986
+2050,Leading the Way,UK,Concrete,1716283764689.5142
+2050,Leading the Way,UK,Copper,11843031005.986017
+2050,Leading the Way,UK,Epoxy,4958119582.4737425
+2050,Leading the Way,UK,EVA ,0.0
+2050,Leading the Way,UK,Fibre Glass,16065411777.813057
+2050,Leading the Way,UK,Glass,123523556706.34702
+2050,Leading the Way,UK,Lubricant,146713567992.36096
+2050,Leading the Way,UK,Non-Ferrous Metal,27882744596.335613
+2050,Leading the Way,UK,Paint,201377932.59965417
+2050,Leading the Way,UK,Plastic,17278699600.917374
+2050,Leading the Way,UK,PVC,137612553641.82858
+2050,Leading the Way,UK,Resin,1930304924.9028141
+2050,Leading the Way,UK,Sand,251220682246.2818
+2050,Leading the Way,UK,Silicon,0.0
+2050,Leading the Way,UK,Steel,1010148467108.4869
+2050,Leading the Way,UK,Stainless Steel,1626993125549.617
+2050,Steady Progression,UK,Aluminium,774357389.1421118
+2050,Steady Progression,UK,Bentonite,0.0
+2050,Steady Progression,UK,Carbon Fiber,360510453.31508815
+2050,Steady Progression,UK,Cast Iron,170672569791.6056
+2050,Steady Progression,UK,Cement,25062773576.799862
+2050,Steady Progression,UK,Ceramics,82092831883.6458
+2050,Steady Progression,UK,Concrete,1008998974758.7876
+2050,Steady Progression,UK,Copper,5903731298.694355
+2050,Steady Progression,UK,Epoxy,2982759929.4606066
+2050,Steady Progression,UK,EVA ,0.0
+2050,Steady Progression,UK,Fibre Glass,9664806526.759289
+2050,Steady Progression,UK,Glass,96782468722.0395
+2050,Steady Progression,UK,Lubricant,88261556510.79964
+2050,Steady Progression,UK,Non-Ferrous Metal,21846528133.858433
+2050,Steady Progression,UK,Paint,121147144.20344424
+2050,Steady Progression,UK,Plastic,13285501046.39737
+2050,Steady Progression,UK,PVC,58999709460.54864
+2050,Steady Progression,UK,Resin,1161253996.775918
+2050,Steady Progression,UK,Sand,107707813500.71663
+2050,Steady Progression,UK,Silicon,0.0
+2050,Steady Progression,UK,Steel,886852908468.3783
+2050,Steady Progression,UK,Stainless Steel,1274772322649.5154
+0,Baseline,Kenya,Aluminium,0.0
+0,Baseline,Kenya,Bentonite,0.0
+0,Baseline,Kenya,Carbon Fiber,0.0
+0,Baseline,Kenya,Cast Iron,0.0
+0,Baseline,Kenya,Cement,0.0
+0,Baseline,Kenya,Ceramics,0.0
+0,Baseline,Kenya,Concrete,0.0
+0,Baseline,Kenya,Copper,0.0
+0,Baseline,Kenya,Epoxy,0.0
+0,Baseline,Kenya,EVA ,0.0
+0,Baseline,Kenya,Fibre Glass,0.0
+0,Baseline,Kenya,Glass,0.0
+0,Baseline,Kenya,Lubricant,0.0
+0,Baseline,Kenya,Non-Ferrous Metal,0.0
+0,Baseline,Kenya,Paint,0.0
+0,Baseline,Kenya,Plastic,0.0
+0,Baseline,Kenya,PVC,0.0
+0,Baseline,Kenya,Resin,0.0
+0,Baseline,Kenya,Sand,0.0
+0,Baseline,Kenya,Silicon,0.0
+0,Baseline,Kenya,Steel,0.0
+0,Baseline,Kenya,Stainless Steel,0.0
