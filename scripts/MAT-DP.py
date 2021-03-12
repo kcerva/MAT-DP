@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[85]:
+# In[1]:
 
 
 import matplotlib.pyplot as plt
@@ -20,26 +20,27 @@ from os.path import isfile, join
 from pathlib import Path
 from os import listdir
 from os.path import isfile, join
-# import country_converter as coco
+import country_converter as coco
 from plotly.subplots import make_subplots
 import ipywidgets as widgets
 import os
 import glob
+import matplotlib.pyplot as plt
 # from floweaver import *
 # %matplotlib inline
 
-from IPython.display import display
-from ipysankeywidget import SankeyWidget
+# from IPython.display import display
+# from ipysankeywidget import SankeyWidget
 
 
-# In[8]:
+# In[2]:
 
 
 # Setting working directory
 os.chdir ('C:\\Users\\KarlaC\\MAT-DP\\')
 
 
-# In[153]:
+# In[3]:
 
 
 # Make folders for figures
@@ -54,7 +55,7 @@ if not os.path.exists('outputs'):
 
 # # Load E+M data
 
-# In[10]:
+# In[9]:
 
 
 # Define matrices and load data
@@ -103,7 +104,7 @@ for ef, ne in zip([E, W, R, K],['E', 'W', 'R', 'K'] ):
 
 # # Load E+M data for all countries
 
-# In[185]:
+# In[5]:
 
 
 # Df w all countries and scenarios
@@ -138,7 +139,7 @@ dfC['Year'] = dfC['Year'].replace(np.nan,0).astype('int')
 coln = list(cM.index)
 
 
-# In[173]:
+# In[10]:
 
 
 # Df w TEMBA results
@@ -195,9 +196,10 @@ generation_piv = generation_piv.drop(columns = 'parameter')
 generation_piv.rename(columns ={'scenario':'Scenario','country':'Country'}, inplace = True)
 
 
+
 # ## Appending Uganda, UK and TEMBA data
 
-# In[186]:
+# In[7]:
 
 
 dfC['Coal CCS'] = 0
@@ -205,6 +207,38 @@ dfC = dfC.append(generation_piv)
 dfC = dfC[['Year', 'Scenario', 'Country', 'Wind (Onshore)', 'Wind (Offshore)',
        'Solar CSP', 'Solar PV', 'Hydro', 'Oil', 'Gas CCS', 'Gas', 'Nuclear',
        'Geothermal', 'Coal', 'Coal CCS', 'Biomass', 'BECCS', 'Hydrogen']]
+
+
+# ## Calculating mass of materials for all countries
+
+# In[110]:
+
+
+mat_country = pd.DataFrame(columns = ['Year', 'Scenario', 'Country','tech',
+                                      'Aluminium', 'Bentonite', 'Carbon Fiber', 'Cast Iron', 'Cement',
+                                      'Ceramics', 'Concrete', 'Copper', 'Epoxy', 'EVA ', 'Fibre Glass',
+                                      'Glass', 'Lubricant', 'Non-Ferrous Metal', 'Paint', 'Plastic', 'PVC',
+                                      'Resin', 'Sand', 'Silicon', 'Steel', 'Stainless Steel'] )
+coln = [ 'Wind (Onshore)', 'Wind (Offshore)',
+       'Solar CSP', 'Solar PV', 'Hydro', 'Oil', 'Gas CCS', 'Gas', 'Nuclear',
+       'Geothermal', 'Coal', 'Biomass', 'BECCS', 'Hydrogen', 'Coal CCS']
+# [coln]
+for c in dfC['Country'].unique():
+    for sc in dfC[dfC['Country']==c]['Scenario'].unique():
+        for y in dfC[(dfC['Country']==c)&(dfC['Scenario']==sc)]['Year'].unique():
+            mat_c = dfC[(dfC['Country']==c)&(dfC['Scenario']==sc)&(dfC['Year']==y)][coln].                        T.values*cM
+#         mat_c = mat_c.sum().reset_index()
+        mat_c['Country'] = c
+        mat_c['Year'] = y
+        mat_c['Scenario'] = sc
+        mat_country = mat_country.append(mat_c.reset_index())
+#     val = pd.DataFrame(row).fillna(0).T.dot(cM.fillna(0)[0:len(dfC.iloc[:,3:].T)].values).dot(cE.values)
+mat_country = mat_country[['Year', 'Scenario', 'Country', 'tech',
+                           'Aluminium', 'Bentonite', 'Carbon Fiber', 'Cast Iron', 'Cement',
+                           'Ceramics', 'Concrete', 'Copper', 'Epoxy', 'EVA ', 'Fibre Glass',
+                           'Glass', 'Lubricant', 'Non-Ferrous Metal', 'Paint', 'Plastic', 'PVC',
+                           'Resin', 'Sand', 'Silicon', 'Steel', 'Stainless Steel']]
+mat_country.to_csv(r'outputs/massmat_bytech_bycountry.csv',index=False)
 
 
 # ## Calculating E,W, K, R for all countries
@@ -518,7 +552,7 @@ for ef, ne in zip([e_cE, e_cW, e_cR, e_cK],['E', 'W', 'R', 'K'] ):
 
 # # Employment and land-use
 
-# In[29]:
+# In[194]:
 
 
 # Employment by stage [job-years/MW] Manuf and C&I and Dec, [jobs/MW] for O&M, [jobs/PJ] for fuel
@@ -527,6 +561,7 @@ jobs = pd.read_excel(r'data/Excel_model_material_implications_energy_systems.xls
                 skiprows = 37, usecols = "B:G,T", nrows = 23)
 jobs.columns = ['tech', 'Manufacturing', 'Construction and Installation',
        'Operation and Maintenance', 'Fuel', 'Decommissioning', 'Total']
+jobs['tech_specific'] = jobs['tech']
 
 # In [jobs-lifetime/kWh]
 op_jobs = pd.read_excel(r'data/Excel_model_material_implications_energy_systems.xlsx', 
@@ -534,7 +569,7 @@ op_jobs = pd.read_excel(r'data/Excel_model_material_implications_energy_systems.
                 skiprows = 65, usecols = "B:G", nrows = 23)
 op_jobs.columns = ['tech','Capacity (MW)', 'kWh/lifetime', 'Load factor','Lifetime','Operation and Maintenance']
 
-jobs = jobs.merge(op_jobs[['tech','Capacity (MW)','kWh/lifetime']], on = 'tech')
+# country_jobs = jobs.merge(op_jobs[['tech','Capacity (MW)','kWh/lifetime']], on = 'tech')
 # Ram2020 has Regional Employment multipliers that should be useful for country evaluations
 
 # Land required [km^2/1000 MW]
@@ -543,13 +578,433 @@ land = pd.read_excel(r'data/Excel_model_material_implications_energy_systems.xls
                 skiprows = 19, usecols = "B:C", nrows = 15)
 land.columns = ['tech','land']
 
-jobs['Operation and Maintenance (jobs)'] = jobs['Capacity (MW)'] * jobs['Operation and Maintenance']
+# country_jobs['Operation and Maintenance (jobs)'] = country_jobs['Capacity (MW)'] * country_jobs['Operation and Maintenance']
+
+# Mapping specific techs to general tech names
+tech_u = ['Solar CSP', 'Solar PV', 'Solar PV',
+       'Hydro', 'Hydro', 'Geothermal', 'Gas CCS', 'Oil',
+       'Gas', 'Gas', 'Coal', 'Wind (Onshore)',
+       'Wind (Offshore)', 'Nuclear', 'Biomass', 'Biogas', 'BECCS',
+       'Hydrogen', 'Waste-to-energy', 'Storage',
+       'Storage', 'Storage',
+       'Storage',
+          'Storage', 'Power to Heat', 'Methanation', 'Steam Turbine']
+tech_sp = ['Solar CSP', 'Solar PV (utility)', 'Solar PV (rooftop)',
+       'Hydro (Dam)', 'Hydro (RoR)', 'Geothermal', 'Gas CCS', 'Oil',
+       'Gas (OCGT)', 'Gas (CCGT)', 'Coal', 'Wind (Onshore)',
+       'Wind (Offshore)', 'Nuclear', 'Biomass', 'Biogas', 'BECCS',
+       'Hydrogen', 'Waste-to-energy', 'Storage Pumped Hydro',
+       'Storage Battery (large scale)', 'Storage Battery (prosumer)',
+       'Storage Gas', 
+        'Storage Adiabatic Compressed Air Energy', 'Power to Heat (PtH)', 'Methanation', 'Steam Turbine (ST)']
+
+techd = pd.DataFrame(list(zip(tech_u,tech_sp)), columns = ['tech','tech_specific'])
+techd = techd.set_index('tech_specific')['tech'].to_dict() 
+
+jobs['tech'] = jobs['tech_specific'].map(techd)
+
+# Averaging jobs by tech
+jobs_m = pd.melt(jobs.drop(columns = 'Total'), 
+                     id_vars = ['tech_specific','tech'], 
+                     var_name = 'Type', value_name = 'Value')
+av_jobs = jobs_m.groupby(['tech','Type']).mean().reset_index()
+
+jobs_piv = pd.pivot_table(av_jobs, values = 'Value', 
+                          index = ['tech'], 
+                          columns = 'Type', 
+                          aggfunc=np.sum)
+jobs_piv.to_csv(r'outputs/jobs_piv.csv')
+
+
+# ## Employment calculations using multipliers
+
+# In[39]:
+
+
+# Regional multipliers
+job_regfact = pd.read_excel(r'data/1-s2.0-S0040162518314112-mmc1.xlsx', 
+                                sheet_name = 'Regional Factors', skiprows = 1,
+                                usecols = "A:I", nrows = 10)
+job_regfact = job_regfact.rename(columns = {'Unnamed: 0':'Region'})
+job_regfact['Multiplier_name'] = 'Regional_factor'
+
+job_expfac = pd.read_excel(r'data/1-s2.0-S0040162518314112-mmc1.xlsx', 
+                                sheet_name = 'Import-Export Shares', skiprows = 1,
+                                usecols = "A:I", nrows = 10)
+job_expfac = job_expfac.rename(columns = {'Unnamed: 0':'Region'})
+job_expfac['Multiplier_name'] = 'Export_factor'
+
+job_multipliers = pd.DataFrame(columns = ['Region', 2015, 2020, 2025, 
+                                          2030, 2035, 2040, 2045, 2050, 'Multiplier_name'] )
+for df in [job_regfact,job_expfac]:
+    job_multipliers = job_multipliers.append(df)
+    
+job_multipliers_m = pd.melt(job_multipliers.reset_index(), 
+                     id_vars = ['Region','Multiplier_name'], 
+                     var_name = 'Year', value_name = 'Value')
+
+job_multipliers_piv = pd.pivot_table(job_multipliers_m, values = 'Value', 
+                          index = ['Region','Year'], 
+                          columns = 'Multiplier_name', 
+                          aggfunc=np.sum).reset_index()
+
+
+# In[138]:
+
+
+#  Filling in multipliers for missing years
+
+job_multipliers_pred = pd.DataFrame(columns = job_multipliers_m.columns)
+for r in job_multipliers_m[(job_multipliers_m['Region'].notnull())&                           (job_multipliers_m['Region']!='Global')]['Region'].unique():
+    for m in job_multipliers_m['Multiplier_name'].unique():
+        print(r)
+        x = job_multipliers_m[(job_multipliers_m['Year']!= 'index')&                              (job_multipliers_m['Region']== r)&                              (job_multipliers_m['Multiplier_name']== m)]['Year'].astype(str).astype(int)
+        
+        y = job_multipliers_m[(job_multipliers_m['Year']!= 'index')&                              (job_multipliers_m['Region']== r)&                              (job_multipliers_m['Multiplier_name']== m)]['Value'].values
+
+        # fit function
+        z = np.polyfit(x, y, 2)
+        f = np.poly1d(z)
+
+        # calculate new x's and y's
+        x_new = list(range(2015, 2066))
+        y_new = f(x_new)
+        
+        m1 = pd.DataFrame(list(zip(x_new,y_new)), columns = ['Year','Value'])
+        m1['Multiplier_name'] = m
+        m1['Region'] = r      
+        
+        if (r == 'Europe' or r == 'Southeast Asia') and m == 'Export_factor':
+            xx = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2020)]['Value'].values[0]
+            m1.loc[m1['Year']<2035, 'Value'] = xx
+            
+            xx2 = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2035)]['Value'].values[0]
+            m1.loc[m1['Year']>=2035, 'Value'] = xx2
+        
+        if r == 'North America' and m == 'Export_factor':
+            xx0 = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2015)]['Value'].values[0]
+            m1.loc[m1['Year']<2020, 'Value'] = xx0
+            
+            xx = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2020)]['Value'].values[0]
+            m1.loc[m1[(m1['Year']<2035)&(m1['Year']>=2020)].index, 'Value'] = xx
+            
+            xx2 = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2035)]['Value'].values[0]
+            m1.loc[m1['Year']>=2035, 'Value'] = xx2
+            
+        if r == 'SAARC' and m == 'Export_factor':
+            xx = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2030)]['Value'].values[0]
+            m1.loc[m1['Year']>=2030, 'Value'] = xx
+            
+        if r == 'Northeast Asia' and m == 'Regional_factor':
+            xx = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2040)]['Value'].values[0]
+            m1.loc[m1['Year']>=2035, 'Value'] = xx
+            
+        if r == 'South America' and m == 'Export_factor':
+            xx = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2040)]['Value'].values[0]
+            m1.loc[m1['Year']>=2040, 'Value'] = xx
+            
+        if (r == 'Southeast Asia' or r == 'South America' or r == 'Eurasia' or            r == 'MENA' or r == 'Sub-Saharan Africa' or r == 'SAARC') and m == 'Regional_factor':
+            xx = job_multipliers_m[(job_multipliers_m['Region']== r)&                                  (job_multipliers_m['Multiplier_name']== m)&                                  (job_multipliers_m['Year']== 2050)]['Value'].values[0]
+            m1.loc[m1['Year']>2050, 'Value'] = xx
+            
+        job_multipliers_pred = job_multipliers_pred.append(m1) 
+        
+#         If graphs are needed
+#         print(m)
+#         plt.plot(x,y,'o', x_new, y_new, m1['Year'],m1['Value'])
+#         plt.xlim([2014, 2066 ])
+#         plt.show()
+        
+job_multipliers_pred_piv = pd.pivot_table(job_multipliers_pred, values = 'Value', 
+                          index = ['Region','Year'], 
+                          columns = 'Multiplier_name', 
+                          aggfunc=np.sum).reset_index()
+
+job_multipliers_pred_piv.to_csv(r'outputs/job_multipliers.csv')  
+
+        
+
+
+# In[40]:
+
+
+# This is for technologies (not regions)
+job_decfactC = pd.read_excel(r'data/1-s2.0-S0040162518314112-mmc1.xlsx', 
+                                sheet_name = 'Decline Factors', skiprows = 1,
+                                usecols = "A,K:R", nrows = 25)
+job_decfactC.columns = ['tech_spec',2015,2020,2025,2030,2035,2040,2045,2050]
+job_decfactC['Multiplier_name'] = 'Capex_declinefactor'
+
+job_decfactO = pd.read_excel(r'data/1-s2.0-S0040162518314112-mmc1.xlsx', 
+                                sheet_name = 'Decline Factors', skiprows = 30,
+                                usecols = "A,K:R", nrows = 25)
+job_decfactO.columns = ['tech_spec',2015,2020,2025,2030,2035,2040,2045,2050]
+job_decfactO['Multiplier_name'] = 'Opex_declinefactor'
+job_decfact = job_decfactC.append(job_decfactO)
+
+tech_o = ['Wind onshore', 'Wind offshore', 'PV Utility-scale', 'PV rooftop',
+       'Biomass', 'Hydro Dam', 'Hydro RoR', 'Geothermal', 'CSP',
+       'CHP Biogas', 'Waste-to-energy', 'Methanation',
+       'Coal PP (Hard Coal)', 'Nuclear PP', 'OCGT', 'CCGT',
+       'Steam Turbine (ST)', 'Power to Heat (PtH) ',
+       'Internal Combustion Engine (ICE)', 'Gas Storage',
+       'Power to Gas (PtG)', 'Battery Storage large-scale',
+       'Battery Storage prosumer', 'Pumped Hydro Storage (PHS)',
+       'Adiabatic Compressed Air Energy Storage (A-CAES)',
+       'PV Utility scale', 'PV roof top']
+
+tech_sp = ['Wind (Onshore)', 'Wind (Offshore)', 'Solar PV (utility)', 'Solar PV (rooftop)',
+       'Biomass', 'Hydro (Dam)', 'Hydro (RoR)', 'Geothermal', 'Solar CSP',
+       'Biogas', 'Waste-to-energy', 'Methanation',
+       'Coal', 'Nuclear', 'Gas (OCGT)', 'Gas (CCGT)',
+       'Steam Turbine (ST)', 'Power to Heat (PtH)',
+       'Internal Combustion Engine (ICE)', 'Storage Gas',
+       'Power to Gas (PtG)', 'Storage Battery (large-scale)',
+       'Storage Battery (prosumer)', 'Storage Pumped Hydro',
+       'Storage Adiabatic Compressed Air Energy',
+       'Solar PV (utility)', 'Solar PV (rooftop)']
+
+techd2 = pd.DataFrame(list(zip(tech_o,tech_sp)), columns = ['tech_specific','tech_spec'])
+techd2 = techd2.set_index('tech_specific')['tech_spec'].to_dict()
+
+job_decfact['tech_specific'] = job_decfact['tech_spec'].map(techd2)
+job_decfact['tech'] = job_decfact['tech_specific'].map(techd)
+
+job_decfact= job_decfact.drop(columns = ['tech_spec']).set_index('tech')
+
+job_decfact_m = pd.melt(job_decfact.reset_index(), 
+                     id_vars = ['tech','tech_specific','Multiplier_name'], 
+                     var_name = 'Year', value_name = 'Value')
+
+job_decfact_piv = pd.pivot_table(job_decfact_m, values = 'Value', 
+                          index = ['tech','tech_specific','Year'], 
+                          columns = 'Multiplier_name', 
+                          aggfunc=np.sum).reset_index()
+
+
+# In[152]:
+
+
+#  Filling in declining factors for missing years
+job_decfact_pred = pd.DataFrame(columns = job_decfact_m.columns)
+for t in job_decfact_m[job_decfact_m['tech_specific'].notnull()]['tech_specific'].unique():
+    for m in job_decfact_m['Multiplier_name'].unique():
+        print(t)
+        x = job_decfact_m[(job_decfact_m['tech_specific']== t)&                           (job_decfact_m['Multiplier_name']== m)]['Year'].astype(str).astype(int)
+        
+        y = job_decfact_m[(job_decfact_m['tech_specific']== t)&                           (job_decfact_m['Multiplier_name']== m)]['Value'].values
+        if not x.empty:
+            if t == 'Storage Battery (prosumer)' and m == 'Opex_declinefactor':
+                # fit function
+                z = np.polyfit(x, y, 2)
+                f = np.poly1d(z)
+            
+            # fit function
+            z = np.polyfit(x, y, 3)
+            f = np.poly1d(z)
+
+            # calculate new x's and y's
+            x_new = list(range(2015, 2051))
+            y_new = f(x_new)
+            m1 = pd.DataFrame(list(zip(x_new,y_new)), columns = ['Year','Value'])
+            m1['Multiplier_name'] = m
+            m1['tech_specific'] = t
+            m1['tech'] = job_decfact_m[(job_decfact_m['tech_specific']== t)]['tech'].values[0]
+            
+#             Adding 2050 onwards values
+            x_new2 = list(range(2051, 2066))
+            m2 = pd.DataFrame(x_new2, columns = ['Year'])
+            m2['Value'] = job_decfact_m[(job_decfact_m['tech_specific']== t)&                           (job_decfact_m['Multiplier_name']== m)&                                 (job_decfact_m['Year']== 2050)]['Value'].values[0]
+            m2['Multiplier_name'] = m
+            m2['tech_specific'] = t
+            m2['tech'] = job_decfact_m[(job_decfact_m['tech_specific']== t)]['tech'].values[0]
+            m1 = m1.append(m2)
+                        
+#             Fixing defined intervals
+            if t == 'Nuclear' and (m == 'Capex_declinefactor' or m == 'Opex_declinefactor'):
+#                 xx0 = job_multipliers_m[(job_decfact_m['tech_specific']== t)&\
+#                                   (job_decfact_m['Multiplier_name']== m)&\
+#                                   (job_decfact_m['Year']== 2015)]['Value'].values[0]
+#                 m1.loc[m1['Year']<2020, 'Value'] = xx0
+
+                xx = job_decfact_m[(job_decfact_m['tech_specific']== t)&                                      (job_decfact_m['Multiplier_name']== m)&                                      (job_decfact_m['Year']== 2020)]['Value'].values[0]
+                m1.loc[m1[(m1['Year']<2030)&(m1['Year']>=2020)].index, 'Value'] = xx
+                
+                xx1 = job_decfact_m[(job_decfact_m['tech_specific']== t)&                                      (job_decfact_m['Multiplier_name']== m)&                                      (job_decfact_m['Year']== 2030)]['Value'].values[0]
+                m1.loc[m1[(m1['Year']<2040)&(m1['Year']>=2030)].index, 'Value'] = xx1
+                
+                xx2 = job_decfact_m[(job_decfact_m['tech_specific']== t)&                                      (job_decfact_m['Multiplier_name']== m)&                                      (job_decfact_m['Year']== 2040)]['Value'].values[0]
+                m1.loc[m1[(m1['Year']<2050)&(m1['Year']>=2040)].index, 'Value'] = xx2
+                
+                xx3 = job_decfact_m[(job_decfact_m['tech_specific']== t)&                                      (job_decfact_m['Multiplier_name']== m)&                                      (job_decfact_m['Year']== 2050)]['Value'].values[0]
+                m1.loc[m1['Year']>=2050, 'Value'] = xx3
+            
+            if t == 'Power to Heat (PtH)' and (m == 'Capex_declinefactor' or m == 'Opex_declinefactor'):
+            
+                xx = job_decfact_m[(job_decfact_m['tech_specific']== t)&                                      (job_decfact_m['Multiplier_name']== m)&                                      (job_decfact_m['Year']== 2025)]['Value'].values[0]
+                m1.loc[m1[(m1['Year']<2035)&(m1['Year']>=2025)].index, 'Value'] = xx
+                
+                xx3 = job_decfact_m[(job_decfact_m['tech_specific']== t)&                                      (job_decfact_m['Multiplier_name']== m)&                                      (job_decfact_m['Year']== 2035)]['Value'].values[0]
+                m1.loc[m1['Year']>=2035, 'Value'] = xx3
+            
+            job_decfact_pred = job_decfact_pred.append(m1)
+            
+#         If graphs are needed
+#             print(m)
+#             plt.plot(x,y,'o', x_new, y_new, m1['Year'],m1['Value'])
+#             plt.xlim([2014, 2066 ])
+#             plt.show()
+            
+# FUTURE WORK: Fix storage curves to match values better --> if Storage is needed
+
+job_decfact_pred_piv = pd.pivot_table(job_decfact_pred, values = 'Value', 
+                          index = ['tech','tech_specific','Year'], 
+                          columns = 'Multiplier_name', 
+                          aggfunc=np.sum).reset_index()
+
+job_decfact_pred_piv.to_csv(r'outputs/job_DeclineFact.csv')
 
 
 # In[ ]:
 
 
-# employment * kWh/tech/country
+### Read files again from here if needed
+
+
+# In[ ]:
+
+
+# Adding country names and regions 
+
+# Namibia NM in TEMBA, NA in ISO2
+results_df.loc[results_df['country']=='NM','country']='NA'
+temba_codes = list(results_df['country'].unique())
+standard_names = coco.convert(names=temba_codes, to='name_short')
+iso3_codes = coco.convert(names=temba_codes, to='ISO3', not_found=None)
+
+ts_d = pd.DataFrame(list(zip(temba_codes,standard_names)), columns = ['country','Country'])
+ts_d = ts_d.set_index('country')['Country'].to_dict()
+
+ti3_d = pd.DataFrame(list(zip(temba_codes,iso3_codes)), columns = ['country','ISO3'])
+ti3_d = ti3_d.set_index('country')['ISO3'].to_dict()
+
+
+nmresults_df = results_df
+nmresults_df['ISO3'] = nmresults_df['country'].map(ti3_d)
+nmresults_df['Country'] = nmresults_df['country'].map(ts_d)
+
+# Adding Ramm's country classifications
+cclassif = pd.read_csv(r'data/UNSD — Methodology.csv', 
+                       usecols = ['ISO-alpha2 Code', 'ISO-alpha3 Code','Country or Area',
+                                  'Ramm_region', 'Ramm_region2','Ramm_region3'])
+cclassif.rename(columns = {'ISO-alpha2 Code':'country', 'ISO-alpha3 Code':'ISO3'}, inplace = True)
+
+rr1_d = cclassif[cclassif['Ramm_region'].notnull()][['ISO3',
+                                                     'Ramm_region']].set_index('ISO3')['Ramm_region'].to_dict()
+rr2_d = cclassif[cclassif['Ramm_region2'].notnull()][['ISO3',
+                                                     'Ramm_region2']].set_index('ISO3')['Ramm_region2'].to_dict()
+rr3_d = cclassif[cclassif['Ramm_region3'].notnull()][['ISO3',
+                                                     'Ramm_region3']].set_index('ISO3')['Ramm_region3'].to_dict()
+
+# since the regions are not a one-to-one match, I need to group the country data by 
+#  regions and then perform the employment opertation on them for totals. 
+# Country employment values can use averages of regions.
+nmresults_df['Ramm_region'] = nmresults_df['ISO3'].map(rr1_d)
+nmresults_df['Ramm_region2'] = nmresults_df['ISO3'].map(rr2_d)
+nmresults_df['Ramm_region3'] = nmresults_df['ISO3'].map(rr3_d)
+
+
+# In[ ]:
+
+
+# From Ram2020
+# Manuf jobs (local) = Installed Capacity * EF (Manufacturing)*decline factor of the technology*
+#              local manufacturing factor*regional employment multiplier
+# Manuf jobs (export) = Exported Capacity * EF (Manufacturing)*decline factor of the technology*
+#              *regional employment multiplier
+# C&I jobs = Installed Capacity * EF (C&I)*decline factor of the technology*regional multiplier
+# O&M jobs = Installed Capacity * EF (O&M)*decline factor of the technology*regional multiplier
+# Fuel = Electricty Generation*EF (Fuel)/Efficiency of technology*regional multiplier
+# Transmission jobs = Investments in Grids*EF (Grids)*regional multiplier
+# Decommisioning jobs = Decommisioned Capacity*EF (Decommissioning)*regional employment multiplier
+
+
+# In[251]:
+
+
+# Calculation of employment based on new capacity and multipliers 
+cap = ['Power Generation Capacity (Aggregate)','New power generation capacity (Aggregate)']
+employment_df = nmresults_df[nmresults_df['parameter'].isin(cap)]
+employment_df = employment_df.drop(columns = ['Ramm_region2',
+                                              'Ramm_region3']).rename(columns = {'Ramm_region':'Region',
+                                                                                'Value':'Capacity'})
+
+# power = ['Power Generation Capacity (Aggregate)','New power generation capacity (Aggregate)']
+# upow = ['GW','GW']
+
+
+# In[252]:
+
+
+# Using multipliers
+
+# For now only using Ramm_region since data is mostly for SSA
+employment_df['Year'] = employment_df['Year'].astype('int')
+job_multipliers_pred_piv['Year'] = job_multipliers_pred_piv['Year'].astype('int')
+job_decfact_pred_piv['Year'] = job_decfact_pred_piv['Year'].astype('int')
+
+employment_df = employment_df.merge(jobs_piv.reset_index()[['tech','Construction and Installation', 
+                                                            'Decommissioning', 'Fuel','Manufacturing', 
+                                                            'Operation and Maintenance']], on = 'tech')
+employment_df = employment_df.merge(job_multipliers_pred_piv, on = ['Region','Year'])
+employment_df = employment_df.merge(job_decfact_pred_piv.groupby(['tech','Year']).mean().reset_index(), 
+                                    on = ['tech','Year'])
+
+
+# In[254]:
+
+
+for j in [ 'Construction and Installation', 'Manufacturing']:
+#     ,'Decommissioning', 'Fuel' 'Operation and Maintenance']:
+    if j =='Manufacturing':
+        employment_df['{} (local jobs)'.format(j)] = [x*1000*y*z*(1-a)*b
+                                                    for x, y, z, a, b
+                                                    in zip(employment_df['Capacity'],
+                                                           employment_df['{}'.format(j)],
+                                                           employment_df['Capex_declinefactor'],
+                                                           employment_df['Export_factor'],
+                                                           employment_df['Regional_factor'])]
+        employment_df['{} (external jobs)'.format(j)] = [x*1000*y*z*a*b
+                                                    for x, y, z, a,b
+                                                    in zip(employment_df['Capacity'],
+                                                           employment_df['{}'.format(j)],
+                                                           employment_df['Capex_declinefactor'],
+                                                           employment_df['Export_factor'],
+                                                           employment_df['Regional_factor'])]
+    if j =='Construction and Installation':
+        employment_df['{} (jobs)'.format(j)] = [x*1000*y*z*b
+                                                    for x, y,z,b
+                                                    in zip(employment_df['Capacity'],
+                                                           employment_df['{}'.format(j)],
+                                                           employment_df['Capex_declinefactor'],
+                                                           employment_df['Regional_factor'])]
+#         O&M jobs need cumulative capacity
+# Fuel jobs need primary energy generation
+# Decommissioning jobs need decommissioned capacity
+
+
+# In[256]:
+
+
+jobs_forplot = pd.melt(employment_df, 
+                     id_vars = ['tech','scenario','country','ISO3','Country','Year','parameter'],
+                        value_vars = ['Capacity','Construction and Installation (jobs)',
+                                       'Manufacturing (local jobs)', 'Manufacturing (external jobs)'],
+                     var_name = 'Indicator', value_name = 'Value')
+jobs_forplot.to_csv(r'outputs/jobs_forplot.csv')
+
+# the values from this df will include new jobs from new power generation and "old jobs" from existing capcity. 
+# In plots, ignore old jobs, because those would now be only "fuel" and decommissioning that are not in the data yet
 
 
 # # Plots for single country values
@@ -980,7 +1435,42 @@ for l, n, co in zip( labels, names, colu):
 # In[ ]:
 
 
+# year in x axis, jobs in y per type
+jobs_forplot = pd.read_csv(r'outputs/jobs_forplot.csv')
 
+
+# In[282]:
+
+
+colors = px.colors.qualitative.Vivid
+
+for c in jobs_forplot['Country'].unique():
+    for sc in jobs_forplot[jobs_forplot['Country']==c]['scenario'].unique():
+    
+        data = jobs_forplot[(jobs_forplot['Country']==c)&                            (jobs_forplot['scenario']==sc)&                            (jobs_forplot['parameter']=='New power generation capacity (Aggregate)')&                            (jobs_forplot['Indicator']!='Capacity')]
+        data = data[data['Value']>0]
+        if not data.empty:
+            fig = go.Figure()
+#             print(c, sc)
+            for t, co  in zip(data['tech'].unique(), colors):
+                for i, d in zip(data['Indicator'].unique(),['solid','dash','dot']):# ('circle','square','diamond')):
+                    fig.add_trace(go.Scatter(x = data[(data['tech']==t)&(data['Indicator']==i)].Year, 
+                                             y = data[(data['tech']==t)&(data['Indicator']==i)].Value,
+                                             mode = 'lines',
+                                             name = '{}- {}'.format(t,i) ,
+#                                              marker = dict(symbol=m),
+#                                              marker_color = co,
+                                             line = dict(dash = d),
+                                             line_color = co,
+                                             stackgroup='one')
+                                 )
+            fig.update_layout(xaxis_title = 'Year', yaxis_title = 'Number of jobs',
+                              template = 'simple_white+presentation',
+#                               barmode='stack'
+                             )
+#             fig.show()            
+            pio.write_image(fig, r'figures/countries/{0}_{1}_employment.pdf'.format(c,sc[:3]), width = 1500, height = 1000)
+            pio.write_image(fig, r'figures/countries/{0}_{1}_employment.eps'.format(c,sc[:3]), width = 1500, height = 1000)
 
 
 # # Plots for general values
@@ -1223,111 +1713,4 @@ for l, n, co in zip( labels, names, colu):
     pio.write_image(fig, r'figures/general_{}.eps'.format(n), width = 800, height = 500)
 #     plotly.offline.plot(fig, filename = r'figures/general_{}.html'.format(n), auto_open=False)
 #     fig.show()
-
-
-# # Sankey for materials and emissions
-
-# In[ ]:
-
-
-# example from Leo's Sankey below
-# http://localhost:8889/notebooks/Dropbox%20(Cambridge%20University)/Leonardo%20PhD/3rd%20Chapter/IEA%20Future%20Scenario/SankeyETP-2014(KCB2020).ipynb
-
-
-# In[ ]:
-
-
-#### DEFINE ALL SLICES IN ORDERING AS VARIABLES
-
-#inputs = slice 0
-
-# primaryenergy=['Oil', 'Coal',  'Nuclear', 'Biomass and waste',
-#        'Renewable', 'Hydrogen', 'Other','Natural gas','Ambient gain']
-
-# transform =['Fuel Processing','Power Plants']
-
-# sectors = ['Road-Light','Road-Heavy','Aviation', 'Navigation','Rail','Agriculture', 'Industry', 'Residential', 'Services']
-
-
-# slice_2 = ['Mechanical', 'Process Heating Indirect', 
-#        'Process Heating Direct', 'Hot Water','Space Heating','Process Cooling', 'Space Cooling',
-#         'Information', 'Illumination']
-
-# devices = ['Spark Ignition Engine','Fuel Cell', 'Diesel Engine','Gas Turbine', 'Electric Motor',
-#            'Boiler', 'Burner','Heat Pump','Electric Heater', 'Cooler',
-#          'Electronics', 'Light Device',
-#         ]
-
-# useful = ['Work','Thermal' , 'Information','loss']
-
-
-# In[193]:
-
-
-from floweaver import *
-from ipysankeywidget import SankeyWidget
-
-
-# In[ ]:
-
-
-
-# partition_type = Partition.Simple('material',df['material'].unique())
-
-# nodes = {
-#     'primary':ProcessGroup(primaryenergy),
-#     'transform': ProcessGroup(transform),
-#     'sector': ProcessGroup(sectors),
-#     'device': ProcessGroup(devices),
-#     'useful': ProcessGroup(useful),
-    
-# }
-
-# # Partition
-# nodes['primary'].partition =Partition.Simple('process',primaryenergy)
-
-# nodes['transform'].partition =Partition.Simple('process',transform)
-# nodes['sector'].partition =Partition.Simple('process',sectors)
-# nodes['device'].partition =Partition.Simple('process',devices)
-# nodes['useful'].partition =Partition.Simple('process',useful)
-
-# #Waypoints
-
-
-# # Order
-# ordering = [
-#     ['primary'],
-#     ['transform'],
-#     ['sector' ],
-#     ['device' ],
-#     ['useful']
-# ]
-
-# palette_leo={'Coal':'black',
-#              'Nuclear':'purple',
-#              'Natural gas':'blue',
-#             'Electricity':'yellow',
-#              'Heat':'orange',
-#             'Oil products':'brown',
-#              'Oil':'brown',
-#              'Renewable':'green',
-#             'Biomass, waste and other renewables':'green',
-#             'Biomass and waste':'green'}
-
-# bundles = [ 
-#     Bundle('primary', 'transform'),
-#     Bundle('transform', 'sector'),
-#     Bundle('sector', 'device'),
-#     Bundle('device', 'useful')
-#            ]
-
-# sdd = SankeyDefinition(nodes, bundles, ordering,flow_partition=partition_type)
-# size = dict(width=1000, height=600)
-
-
-# In[ ]:
-
-
-
-# weave(sdd, df,measures='energy',palette=palette_leo).to_widget(**size)
 
