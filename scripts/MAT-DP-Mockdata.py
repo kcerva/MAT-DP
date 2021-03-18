@@ -27,7 +27,7 @@ import os
 import glob
 
 
-# In[2]:
+# In[5]:
 
 
 # Setting working directory
@@ -49,7 +49,7 @@ if not os.path.exists('outputs'):
 
 # # Load E+M data
 
-# In[9]:
+# In[6]:
 
 
 # Define matrices and load data
@@ -98,7 +98,7 @@ for ef, ne in zip([E, W, R, K],['E', 'W', 'R', 'K'] ):
 
 # # Load E+M data for all countries
 
-# In[10]:
+# In[7]:
 
 
 # Df w all countries and scenarios
@@ -133,7 +133,7 @@ dfC['Year'] = dfC['Year'].replace(np.nan,0).astype('int')
 coln = list(cM.index)
 
 
-# In[116]:
+# In[8]:
 
 
 # Df w TEMBA results
@@ -192,11 +192,11 @@ generation_piv.rename(columns ={'scenario':'Scenario','country':'Country'}, inpl
 
 # ## Appending Uganda, UK and TEMBA data
 
-# In[42]:
+# In[9]:
 
 
 dfC['Coal CCS'] = 0
-dfC = dfC.append(generation_piv[generation_piv['Country'].isin(['KE','RW','ZA'])]) #mockdata
+dfC = dfC.append(generation_piv[generation_piv['Country'].isin(['KE','RW','ZA','ZM'])]) #mockdata
 dfC = dfC[['Year', 'Scenario', 'Country', 'Wind (Onshore)', 'Wind (Offshore)',
        'Solar CSP', 'Solar PV', 'Hydro', 'Oil', 'Gas CCS', 'Gas', 'Nuclear',
        'Geothermal', 'Coal', 'Coal CCS', 'Biomass', 'BECCS', 'Hydrogen']]
@@ -204,7 +204,7 @@ dfC = dfC[['Year', 'Scenario', 'Country', 'Wind (Onshore)', 'Wind (Offshore)',
 
 # ## Calculating mass of materials for all countries
 
-# In[110]:
+# In[10]:
 
 
 mat_country = pd.DataFrame(columns = ['Year', 'Scenario', 'Country','tech',
